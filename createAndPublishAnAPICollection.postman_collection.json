@@ -1,0 +1,468 @@
+{
+	"info": {
+		"_postman_id": "fd825293-5a3f-4554-bbe5-cc264bbc9a9e",
+		"name": "createAndPublishAnAPICollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Dynamic Client Registration",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var CryptoJS = require(\"crypto-js\")",
+							"",
+							"var clientId = jsonData.clientId;",
+							"var clientSecret = jsonData.clientSecret;",
+							"postman.setEnvironmentVariable(\"clientid\", clientId);",
+							"postman.setEnvironmentVariable(\"clientSecret\", clientSecret);",
+							"var tokenString = `${clientId}:${clientSecret}`;",
+							"var formattedString = CryptoJS.enc.Utf8.parse(tokenString);",
+							"var base64Header = CryptoJS.enc.Base64.stringify(formattedString);",
+							"postman.setEnvironmentVariable(\"prereq_header\", base64Header);",
+							"",
+							"pm.test(\"Dynamic Client Registration.\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWRtaW46YWRtaW4=",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"callbackUrl\":\"www.google.lk\",\n  \"clientName\":\"rest_api_admin\",\n  \"owner\":\"admin\",\n  \"grantType\":\"client_credentials password refresh_token\",\n  \"saasApp\":true\n  }\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:{{port}}/client-registration/v0.17/register",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"client-registration",
+						"v0.17",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+							"pm.test(\"Generating token to invoke API Manager REST APIs.\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{prereq_header}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://localhost:{{port}}/oauth2/token?grant_type=client_credentials&scope=apim:api_view apim:api_delete apim:api_import_export apim:api_view apim:subscribe apim:app_manage apim:sub_manage apim:api_key",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"oauth2",
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials"
+						},
+						{
+							"key": "scope",
+							"value": "apim:api_view apim:api_delete apim:api_import_export apim:api_view apim:subscribe apim:app_manage apim:sub_manage apim:api_key"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get APIs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"api_id\", jsonData.list[0].id);",
+							"pm.test(\"Retrieving the vehicle API's information.\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:{{port}}/api/am/devportal/v2/apis?query=context:cake",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"am",
+						"devportal",
+						"v2",
+						"apis"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "context:cake"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createApp",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"app_id\", jsonData.applicationId);",
+							"",
+							"pm.test(\"Creating an OAuth application.\", function () {",
+							"  pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"name\": \"ProductApp_{{$timestamp}}\",\n\"throttlingPolicy\": \"Unlimited\",\n\"description\": \"Sample product application\",\n\"tokenType\": \"JWT\",\n\"groups\": [ ],\n\"attributes\": { },\n\"subscriptionScopes\": [ ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:{{port}}/api/am/devportal/v2/applications",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"am",
+						"devportal",
+						"v2",
+						"applications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AddSubscription",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Creating a subscription for the vehicle API to the above application.\", function () {",
+							"  pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"applicationId\": \"{{app_id}}\",\n\"apiId\": \"{{api_id}}\",\n\"throttlingPolicy\": \"Unlimited\",\n\"requestedThrottlingPolicy\": \"Unlimited\",\n\"status\": \"UNBLOCKED\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:{{port}}/api/am/devportal/v2/subscriptions",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"am",
+						"devportal",
+						"v2",
+						"subscriptions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "generateKeyMapping",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"var CryptoJS = require(\"crypto-js\")",
+							"",
+							"var clientId = jsonData.consumerKey;",
+							"var clientSecret = jsonData.consumerSecret;",
+							"postman.setEnvironmentVariable(\"clientid\", clientId);",
+							"postman.setEnvironmentVariable(\"clientSecret\", clientSecret);",
+							"var tokenString = `${clientId}:${clientSecret}`;",
+							"var formattedString = CryptoJS.enc.Utf8.parse(tokenString);",
+							"var base64Header = CryptoJS.enc.Base64.stringify(formattedString)",
+							"postman.setEnvironmentVariable(\"api_prereq_header\", base64Header);",
+							"",
+							"pm.test(\"Generating a key mapping for this application.\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"keyType\": \"PRODUCTION\",\n  \"keyManager\": \"Resident Key Manager\",\n  \"grantTypesToBeSupported\": [\n    \"password\",\n    \"client_credentials\"\n  ],\n  \"callbackUrl\": \"http://sample.com/callback/url\",\n  \"scopes\": [\n    \"am_application_scope\",\n    \"default\"\n  ],\n  \"validityTime\": 3600,\n  \"additionalProperties\": {}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:{{port}}/api/am/devportal/v2/applications/{{app_id}}/generate-keys",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"am",
+						"devportal",
+						"v2",
+						"applications",
+						"{{app_id}}",
+						"generate-keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GenerateAPIAccessToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"api_access_token\", jsonData.access_token);",
+							"",
+							"pm.test(\"Generating an OAuth token to invoke the API.\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic {{api_prereq_header}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"validityPeriod\": 3600,\n\"additionalProperties\": { }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:{{port}}/oauth2/token?grant_type=client_credentials",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{port}}",
+					"path": [
+						"oauth2",
+						"token"
+					],
+					"query": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "InvokeAPI",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Invoking the vehicle resource to get vehicle details.\", function () {",
+							"  pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{api_access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:{{gateway_port}}/cake/1.0.0/menu",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "{{gateway_port}}",
+					"path": [
+						"cake",
+						"1.0.0",
+						"menu"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -12,7 +12,7 @@ pipeline {
         stage('Preparation') {
             steps{
                 git branch: "master",
-                url: 'https://github.com/TTM1991/PizzaShackAPI-1.0.0.git',
+                url: 'https://github.com/TTM1991/ProductAPI-1.0.0.git',
                 credentialsId: 'TTM1991-git'
             }
         }
