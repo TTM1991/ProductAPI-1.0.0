@@ -1,201 +1,26 @@
-openapi: 3.0.1
+swagger: '2.0'
 info:
-  title: ProductAPI
+  title: Sample Swagger Specification
   version: 1.0.0
-servers:
- -
-  url: /
-security:
- -
-  default: []
 paths:
-  /menu:
+  /*:
     get:
-      parameters: []
       responses:
-        "200":
-          description: ok
-      security:
-       -
-        default: []
-      x-auth-type: Application & Application User
-      x-throttling-tier: Unlimited
-      x-wso2-application-security:
-        security-types:
-         - oauth2
-        optional: false
-  /order/{orderID}:
-    get:
-      parameters:
-       -
-        name: orderID
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          format: string
-      responses:
-        "200":
-          description: ok
-      security:
-       -
-        default: []
-      x-auth-type: Application & Application User
-      x-throttling-tier: Unlimited
-      x-wso2-application-security:
-        security-types:
-         - oauth2
-        optional: false
-    put:
-      parameters:
-       -
-        name: orderID
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          format: string
-      requestBody:
-        description: ""
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ItemArrays'
-            example:
-              username: John
-              order_items:
-               -
-                item: Tres Leches
-                quantity: 1
-               -
-                item: Chocolate Cake
-                quantity: 2
-        required: true
-      responses:
-        "200":
-          description: ok
-      security:
-       -
-        default: []
-      x-auth-type: Application & Application User
-      x-throttling-tier: Unlimited
-      x-wso2-application-security:
-        security-types:
-         - oauth2
-        optional: false
-    delete:
-      parameters:
-       -
-        name: orderID
-        in: path
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          format: string
-      responses:
-        "200":
-          description: ok
-      security:
-       -
-        default: []
-      x-auth-type: Application & Application User
-      x-throttling-tier: Unlimited
-      x-wso2-application-security:
-        security-types:
-         - oauth2
-        optional: false
-  /order:
+        '200':
+          description: ''
     post:
-      parameters: []
-      requestBody:
-        description: ""
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ItemArrays'
-            example:
-              username: John
-              order_items:
-               -
-                item: Tres Leches
-                quantity: 1
-               -
-                item: Chocolate Cake
-                quantity: 2
-        required: true
       responses:
-        "200":
-          description: ok
-      security:
-       -
-        default: []
-      x-auth-type: Application & Application User
-      x-throttling-tier: Unlimited
-      x-wso2-application-security:
-        security-types:
-         - oauth2
-        optional: false
-components:
-  schemas:
-    ItemArrays:
-      type: object
-      properties:
-        username:
-          type: string
-        order_items:
-          type: array
-          items:
-            type: object
-            properties:
-              item:
-                type: string
-              quantity:
-                type: integer
-  securitySchemes:
-    default:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: https://test.com
-          scopes: {}
-x-wso2-auth-header: Authorization
-x-wso2-cors:
-  corsConfigurationEnabled: false
-  accessControlAllowOrigins:
-   - '*'
-  accessControlAllowCredentials: false
-  accessControlAllowHeaders:
-   - authorization
-   - Access-Control-Allow-Origin
-   - Content-Type
-   - SOAPAction
-   - apikey
-   - Internal-Key
-  accessControlAllowMethods:
-   - GET
-   - PUT
-   - POST
-   - DELETE
-   - PATCH
-   - OPTIONS
-x-wso2-production-endpoints:
-  urls:
-   - http://localhost:8085
-  type: http
-x-wso2-sandbox-endpoints:
-  urls:
-   - http://localhost:8085
-  type: http
-x-wso2-basePath: /cake/1.0.0
-x-wso2-transports:
- - http
- - https
-x-wso2-response-cache:
-  enabled: false
-  cacheTimeoutInSeconds: 300
+        '200':
+          description: ''
+    put:
+      responses:
+        '200':
+          description: ''
+    delete:
+      responses:
+        '200':
+          description: ''
+    patch:
+      responses:
+        '200':
+          description: ''
