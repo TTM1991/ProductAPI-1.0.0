@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+    tools {nodejs "NodeJSTTM"}
+    environment {
+        CI = 'true'
+        API_DIR = '.'
+        DEV_ENV = 'dev'
+        PROD_ENV = 'prod'
+        TEST_SCRIPT_FILE = 'createAndPublishAnAPICollection.postman_collection.json'        
+    }
+    stages {
+        stage('Preparation') {
+            steps{
+                git branch: "master",
+                url: 'https://github.com/TTM1991/PizzaShackAPI-1.0.0.git',
+                credentialsId: 'TTM1991-git'
+            }
+        }
+        stage('Deploy to Dev') {
+            environment{
+                RETRY = '80'
+            }
+            steps {
+                echo 'Logging into $DEV_ENV'
+                withCredentials([usernamePassword(credentialsId: 'apim_dev', usernameVariable: 'DEV_USERNAME', passwordVariable: 'DEV_PASSWORD')]) {
+                    sh 'apictl login $DEV_ENV -u $DEV_USERNAME -p $DEV_PASSWORD -k'                        
+                }
+                echo 'Deploying to $DEV_ENV'
+                sh 'apictl import api -f $API_DIR -e $DEV_ENV -k --preserve-provider --update --verbose'
+            }
+        }
+        stage('Run Tests in Dev environement') {
+            steps {
+                echo 'Running tests in $DEV_ENV'
+                sh 'newman run $API_DIR/$TEST_SCRIPT_FILE -e APIM_Environment_Dev.postman_environment.json --insecure' 
+            }
+        }
+        stage('Deploy to Production') {
+            environment{
+                RETRY = '60'
+            }
+            steps {
+                sh 'echo "Logging into $PROD_ENV"'
+                withCredentials([usernamePassword(credentialsId: 'apim_prod', usernameVariable: 'PROD_USERNAME', passwordVariable: 'PROD_PASSWORD')]) {
+                    sh 'apictl login $PROD_ENV -u $PROD_USERNAME -p $PROD_PASSWORD -k'                        
+                }
+                echo 'Deploying to Production'
+                sh 'apictl import api -f $API_DIR -e $PROD_ENV -k --preserve-provider --update --verbose'
+            }
+        }
+
+                stage('Run Tests in Prod environment') {
+            steps {
+                echo 'Running tests in $PROD_ENV'
+                sh 'newman run $API_DIR/$TEST_SCRIPT_FILE -e APIM_Environment_Prod.postman_environment.json --insecure' 
+            }
+        }
+    }
+    post {
+        cleanup {
+            deleteDir()
+            dir("${workspace}@tmp") {
+                deleteDir()
+            }
+            dir("${workspace}@script") {
+                deleteDir()
+            }
+        }
+    }
+}
