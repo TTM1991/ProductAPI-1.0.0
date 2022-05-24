@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "fd825293-5a3f-4554-bbe5-cc264bbc9a9e",
 		"name": "createAndPublishAnAPICollection",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19288540"
 	},
 	"item": [
 		{
@@ -431,7 +432,7 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Invoking the vehicle resource to get vehicle details.\", function () {",
+							"pm.test(\"Invoking the cake menu resource to get cake details.\", function () {",
 							"  pm.response.to.have.status(200);",
 							"});"
 						],
