@@ -49,7 +49,7 @@ pipeline {
             }
         }
 
-                stage('Run Tests in Prodd environment') {
+                stage('Run Tests in Prod environment') {
             steps {
                 echo 'Running tests in $PROD_ENV'
                 sh 'newman run $API_DIR/$TEST_SCRIPT_FILE -e APIM_Environment_Prod.postman_environment.json --insecure' 
