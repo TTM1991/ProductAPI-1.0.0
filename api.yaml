@@ -1,7 +1,7 @@
 type: api
 version: v4.1.0
 data:
-  id: d3bd04e2-54df-475d-b23b-3dc654ae2064
+  id: 7d66f0de-7de9-4174-9552-e904a6a116f1
   name: ProductAPI
   context: /cake
   version: 1.0.0
@@ -60,8 +60,8 @@ data:
     secret: ""
     signingAlgorithm: SHA1
     signatureHeader: x-hub-signature
-  createdTime: "1653289638851"
-  lastUpdatedTime: 2022-05-23 16:18:44.817
+  createdTime: "1653368450938"
+  lastUpdatedTime: 2022-05-24 10:38:17.892
   endpointConfig:
     endpoint_type: http
     sandbox_endpoints:
