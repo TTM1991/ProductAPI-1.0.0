@@ -65,9 +65,9 @@ data:
   endpointConfig:
     endpoint_type: http
     sandbox_endpoints:
-      url: http://localhost:8080
+      url: http://localhost:8085
     production_endpoints:
-      url: http://localhost:8080
+      url: http://localhost:8085
   endpointImplementationType: ENDPOINT
   scopes: []
   operations:
