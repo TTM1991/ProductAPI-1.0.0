@@ -35,7 +35,7 @@ pipeline {
                 sh 'newman run $API_DIR/$TEST_SCRIPT_FILE -e APIM_Environment_Dev.postman_environment.json --insecure' 
             }
         }
-        stage('Deploy to Prod environment') {
+        stage('Deploy to Prods environment') {
             environment{
                 RETRY = '60'
             }
