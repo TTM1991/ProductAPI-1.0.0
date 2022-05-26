@@ -1,0 +1,25 @@
+environments:
+    - name: dev
+      configs:
+          endpoints:
+              production:
+                  url: http://localhost:8085
+                  config:
+                      retryTimeOut: 10
+                      retryDelay: 5
+              sandbox:
+                  url: http://localhost:8085
+
+
+    - name: prod
+      configs:
+          endpoints:
+              production:
+                  url: http://localhost:8085
+                  config:
+                      retryTimeOut: 10
+                      retryDelay: 5
+              sandbox:
+                  url: http://localhost:8085
+
+
